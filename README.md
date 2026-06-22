@@ -1,6 +1,6 @@
 # Ad Video Skills
 
-> Claude Code skills for ad / advertising video — turn one motion-graphics template into batches of on-brand, A/B-testable ad creative, launch films, and testimonial clips.
+> AI coding agent skills for ad / advertising video — turn one motion-graphics template into batches of on-brand, A/B-testable ad creative, launch films, and testimonial clips.
 
 ## Install
 
@@ -8,7 +8,7 @@
 npx skills add iart-ai/ad-video-skills
 ```
 
-Works with Claude Code + 40+ agents.
+Works with Claude Code, Cursor, Codex, GitHub Copilot, and 40+ agents.
 
 ## What's included
 
