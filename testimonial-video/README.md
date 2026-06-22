@@ -22,4 +22,4 @@ Animate a written quote, review, or testimonial into a short, trustworthy social
 - `references/batch-and-typography.md` — the review prop schema, CSV/JSON→props parsing and validation, quote typography craft (smart quotes, hanging punctuation, line splitting, orphans), star-rating accessibility, and the batch render script for N videos.
 
 ---
-Part of **[Ad Video Skills](../)** · Built by **[iart.ai](https://iart.ai)** — controllable Motion Graphics MP4 from a prompt or data.
+Part of **[Ad Video Skills](../)** · Built by **[iart.ai](https://iart.ai)** — the AI motion agent for editable, on-brand motion graphics.

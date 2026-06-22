@@ -22,4 +22,4 @@ Build ONE motion-graphics ad template, then mass-produce variants from a data ta
 - `references/platform-specs.md` — exact pixel safe zones, durations, aspect ratios, and format limits for Meta Feed/Reels/Stories, TikTok In-Feed, and YouTube, plus a hook→CTA message-match worksheet.
 
 ---
-Part of **[Ad Video Skills](../)** · Built by **[iart.ai](https://iart.ai)** — controllable Motion Graphics MP4 from a prompt or data.
+Part of **[Ad Video Skills](../)** · Built by **[iart.ai](https://iart.ai)** — the AI motion agent for editable, on-brand motion graphics.

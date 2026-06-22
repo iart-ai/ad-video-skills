@@ -21,4 +21,4 @@ Make a premium, high-energy 15–60s launch film that stops the scroll and conve
 - `references/launch-structure.md` — a full shot-by-shot template with timecodes for a 30s film (scalable to 15–60s), beat-synced reveal timing, kinetic-montage shot recipes, the sound-design-leads-picture workflow, and detailed multi-aspect safe-area maps.
 
 ---
-Part of **[Ad Video Skills](../)** · Built by **[iart.ai](https://iart.ai)** — controllable Motion Graphics MP4 from a prompt or data.
+Part of **[Ad Video Skills](../)** · Built by **[iart.ai](https://iart.ai)** — the AI motion agent for editable, on-brand motion graphics.
