@@ -10,15 +10,23 @@
 npx skills add iart-ai/ad-video-skills
 ```
 
+Or add it as a Claude Code plugin marketplace:
+
+```bash
+/plugin marketplace add iart-ai/ad-video-skills
+```
+
+then `/plugin install ad-video-skills`.
+
 Works with Claude Code, Cursor, Codex, GitHub Copilot, and 40+ agents.
 
 ## What's included
 
 | Skill | What it does |
 |---|---|
-| [ad-creative-video](./ad-creative-video) | One data-driven ad template × a CSV = N message-matched variants, exported to every placement aspect for A/B testing. |
-| [launch-video](./launch-video) | High-energy product launch / hype films: hook → tease → reveal → feature montage → end-card CTA, cut to the beat. |
-| [testimonial-video](./testimonial-video) | Animated quote / review clips with staggered line reveals, key-phrase emphasis, fractional star ratings, and an author block. |
+| [ad-creative-video](./skills/ad-creative-video) | One data-driven ad template × a CSV = N message-matched variants, exported to every placement aspect for A/B testing. |
+| [launch-video](./skills/launch-video) | High-energy product launch / hype films: hook → tease → reveal → feature montage → end-card CTA, cut to the beat. |
+| [testimonial-video](./skills/testimonial-video) | Animated quote / review clips with staggered line reveals, key-phrase emphasis, fractional star ratings, and an author block. |
 
 ## When it activates
 

@@ -1,0 +1,22 @@
+{
+  "name": "ad-video-skills",
+  "version": "0.1.0",
+  "description": "AI coding agent skills for ad / advertising video — turn one motion-graphics template into batches of on-brand, A/B-testable ad creative, launch films, and testimonial clips.",
+  "author": {
+    "name": "iart.ai",
+    "url": "https://iart.ai"
+  },
+  "homepage": "https://iart.ai",
+  "repository": "https://github.com/iart-ai/ad-video-skills",
+  "license": "MIT",
+  "keywords": [
+    "ad-creative",
+    "advertising-video",
+    "video-ad",
+    "launch-video",
+    "testimonial-video",
+    "marketing-video",
+    "motion-graphics",
+    "claude-skill"
+  ]
+}

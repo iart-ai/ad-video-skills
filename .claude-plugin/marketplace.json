@@ -1,0 +1,14 @@
+{
+  "name": "ad-video-skills",
+  "owner": {
+    "name": "iart.ai",
+    "url": "https://iart.ai"
+  },
+  "plugins": [
+    {
+      "name": "ad-video-skills",
+      "source": "./",
+      "description": "AI coding agent skills for ad / advertising video — turn one motion-graphics template into batches of on-brand, A/B-testable ad creative, launch films, and testimonial clips."
+    }
+  ]
+}
