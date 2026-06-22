@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ad Creative · Punchy Sizzle · GSAP</title>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,900;1,9..144,500&family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,900;1,9..144,500&family=Inter:wght@500;700;900&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,900;1,9..144,500&family=Inter:wght@500;700;900&display=swap"></noscript>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -332,7 +335,7 @@
   gsap.to('#blobC', { xPercent: -22, yPercent: 16, duration: 6.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
 
   function build() {
-    const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+    const tl = gsap.timeline({ defaults: { ease: 'power4.out' }, paused: true });
     tl.fromTo('#progress', { scaleX: 0 }, { scaleX: 1, duration: 9.8, ease: 'none' }, 0);
 
     // ===== SCENE 1 : BOOM slam =====
@@ -371,10 +374,10 @@
     // TRANSITION 2 — COLOR BAND SWEEP
     const bands = ['#p1','#p2','#p3'];
     const bandColors = ['var(--yellow)','var(--ink)','var(--magenta)'];
-    gsap.set(bands, {
+    tl.set(bands, {
       visibility: 'visible', left: '-5%', width: '110%', height: '120%',
       top: 0, skewY: -7, backgroundColor: (i) => bandColors[i], yPercent: 135
-    });
+    }, 2.34);
     tl.to(bands, { yPercent: -135, duration: 0.5, stagger: 0.07, ease: 'power3.inOut' }, 2.35)
       .set(bands, { visibility: 'hidden' }, 3.0);
 
@@ -388,12 +391,12 @@
     // TRANSITION 3 — VENETIAN SHUTTER
     const blinds = ['#p1','#p2','#p3','#p4'];
     const blindColors = ['var(--red)','var(--yellow)','var(--magenta)','var(--ink)'];
-    gsap.set(blinds, {
+    tl.set(blinds, {
       visibility: 'visible', left: 0, width: '100%', height: '25.2%',
       top: (i) => (i * 25) + '%',
       backgroundColor: (i) => blindColors[i],
       scaleY: 0, transformOrigin: 'top center'
-    });
+    }, 3.49);
     tl.to(blinds, { scaleY: 1, duration: 0.22, stagger: 0.04, ease: 'power2.in' }, 3.5)
       .set(blinds, { transformOrigin: 'bottom center' }, 3.82)
       .to(blinds, { scaleY: 0, duration: 0.28, stagger: 0.04, ease: 'power2.out' }, 3.85)
@@ -430,18 +433,18 @@
       .set('#cta', { visibility: 'hidden' }, 5.85);
 
     // TRANSITION 5 — IRIS reveal
-    gsap.set('#p5', {
+    tl.set('#p5', {
       visibility: 'visible', top: '50%', left: '50%',
       width: '160vmax', height: '160vmax', xPercent: -50, yPercent: -50,
       borderRadius: '50%', backgroundColor: 'var(--bg)', scale: 1.4
-    });
+    }, 5.59);
     tl.fromTo('#p5', { scale: 1.4 }, { scale: 0, duration: 0.45, ease: 'power3.inOut' }, 5.6)
       .set('#p5', { visibility: 'hidden' }, 6.1);
 
     // ===== SCENE 6 : AD CREATIVE poster — color slabs slam & stack =====
-    gsap.set('#slab1', { visibility: 'visible', xPercent: -110 });
-    gsap.set('#slab2', { visibility: 'visible', xPercent:  110 });
-    gsap.set('#slab3', { visibility: 'visible', xPercent: -110 });
+    tl.set('#slab1', { visibility: 'visible', xPercent: -110 }, 5.69);
+    tl.set('#slab2', { visibility: 'visible', xPercent:  110 }, 5.69);
+    tl.set('#slab3', { visibility: 'visible', xPercent: -110 }, 5.69);
     // slabs slam in from alternating sides to assemble a 3-band poster
     tl.to('#slab1', { xPercent: 0, duration: 0.34, ease: 'power4.out' }, 5.7)
       .to('#slab3', { xPercent: 0, duration: 0.34, ease: 'power4.out' }, 5.78)
@@ -466,7 +469,7 @@
 
     // ===== SCENE 7 : iart.ai signature — halftone burst + stamped glossy seal =====
     // halftone dot burst expands behind the logo
-    gsap.set('#halftone', { visibility: 'visible', scale: 0.3, opacity: 0, rotation: 0 });
+    tl.set('#halftone', { visibility: 'visible', scale: 0.3, opacity: 0, rotation: 0 }, 6.99);
     tl.to('#halftone', { scale: 1, opacity: 0.2, duration: 0.6, ease: 'power3.out' }, 7.0)
       .to('#halftone', { rotation: 8, duration: 1.6, ease: 'sine.inOut' }, 7.2);
 
@@ -478,7 +481,7 @@
       .to('#s7 .brandmark', { scale: 1.03, duration: 1.0, ease: 'sine.inOut' }, 7.8);
 
     // glossy seal STAMPS down over the corner of the lockup
-    gsap.set('#seal', { visibility: 'visible', xPercent: 86, yPercent: -86, rotation: 14 });
+    tl.set('#seal', { visibility: 'visible', xPercent: 86, yPercent: -86, rotation: 14 }, 7.99);
     tl.fromTo('#seal',
         { scale: 3.2, autoAlpha: 0, rotation: 28 },
         { scale: 1, autoAlpha: 1, rotation: 14, duration: 0.34, ease: 'power4.in' }, 8.0)
@@ -493,6 +496,7 @@
   }
 
   let master = build();
+  master.play(0);
   document.getElementById('replay').addEventListener('click', () => master.restart());
 </script>
 </body>
