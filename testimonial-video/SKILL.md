@@ -152,6 +152,8 @@ Keep colors/fonts/quote-mark/layout in one theme object so 50 testimonials stay 
 
 ## Deliver & verify (rendered stills → MP4)
 
+> **Packaged helper** (`scripts/`): tile your stills with `scripts/contact-sheet.sh sheet.png f-hook.png f-mid.png f-end.png`, then assert the encode with `scripts/probe-mp4.sh out.mp4 [WxH] [fps]`. See `scripts/README.md`.
+
 **Output contract:**
 - A Remotion `Testimonial` registered as `<Composition>` (+ zod `schema` + `defaultProps`), every value frame-driven (no CSS transitions / JS timers / `Date.now()` / `Math.random()`).
 - Deliverable = the rendered `out/*.mp4` per review per aspect (plus the project + review data, so the user re-renders on new quotes).

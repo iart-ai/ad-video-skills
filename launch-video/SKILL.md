@@ -96,6 +96,8 @@ Design the hero/logo/CTA inside the **1:1 center square** so it survives every c
 
 ## Deliver & verify (rendered stills → MP4)
 
+> **Packaged helper** (`scripts/`): tile your stills with `scripts/contact-sheet.sh sheet.png f-hook.png f-mid.png f-end.png`, then assert the encode with `scripts/probe-mp4.sh out.mp4 [WxH] [fps]`. See `scripts/README.md`.
+
 If the launch film is built/rendered in Remotion, treat it as the heavy tier: register a `<Composition>` (+ zod `schema` + `defaultProps`), drive every value off `useCurrentFrame()` — no GSAP timelines / audio-event callbacks / `Date.now()` / `Math.random()` at render time (bake beat + drop timecodes into props). Deliverable = the rendered `out/*.mp4` per aspect (plus the project).
 
 **Verify loop — render stills → inspect → encode.** Sample the arc, with the **shipped** props (real headline/tagline/CTA), not just `defaultProps`.

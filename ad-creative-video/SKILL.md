@@ -119,6 +119,8 @@ Keep critical content out of the 9:16 bottom third — that is where the platfor
 
 ## Deliver & verify (rendered stills → MP4)
 
+> **Packaged helper** (`scripts/`): tile your stills with `scripts/contact-sheet.sh sheet.png f-hook.png f-mid.png f-end.png`, then assert the encode with `scripts/probe-mp4.sh out.mp4 [WxH] [fps]`. See `scripts/README.md`.
+
 **Output contract:**
 - A Remotion ad template registered as `<Composition>` (+ zod `schema` + `defaultProps`), every animated value frame-driven (no CSS transitions / library timers / `Date.now()` / `Math.random()`).
 - Deliverable = the rendered `out/*.mp4` per variant per aspect (plus the project + CSV, so the marketer re-renders on new rows).
