@@ -94,6 +94,42 @@ Design the hero/logo/CTA inside the **1:1 center square** so it survives every c
 - 16:9 + 9:16 + 1:1 exports, key content in the center safe zone.
 - Premium-only shots — nothing mediocre survives the cut.
 
+## Deliver & verify (rendered stills → MP4)
+
+If the launch film is built/rendered in Remotion, treat it as the heavy tier: register a `<Composition>` (+ zod `schema` + `defaultProps`), drive every value off `useCurrentFrame()` — no GSAP timelines / audio-event callbacks / `Date.now()` / `Math.random()` at render time (bake beat + drop timecodes into props). Deliverable = the rendered `out/*.mp4` per aspect (plus the project).
+
+**Verify loop — render stills → inspect → encode.** Sample the arc, with the **shipped** props (real headline/tagline/CTA), not just `defaultProps`.
+
+```bash
+# Frame-exact stills across hook → reveal → end-card
+npx remotion still Launch out/f-hook.png   --frame=24  --props=props/launch.json   # hook earns first 3s
+npx remotion still Launch out/f-reveal.png --frame=270 --props=props/launch.json   # logo SNAPS on the drop frame
+npx remotion still Launch out/f-end.png    --frame=899 --props=props/launch.json   # end card: logo+tagline+CTA, clean hold
+# inspect each: fidelity (product/logo, tagline, CTA text exact, brand colors right, reveal at the drop frame)
+#   AND artifacts (text overflow, off-canvas, CTA in the 9:16 bottom third, missing font, flash frame stuck on)
+```
+
+**Multi-aspect — verify the master in EACH aspect before encoding all of them.** A reframe bug (hero pushed off the safe zone) repeats across every aspect; catch it once.
+
+```bash
+for ar in 16x9 9x16 1x1; do                                 # check reveal + end card per aspect
+  npx remotion still Launch "out/reveal-${ar}.png" --frame=270 \
+    --props=props/launch.json --props-merge="{\"aspect\":\"${ar}\"}"
+done
+# stills clean in all aspects? → then encode each:
+for ar in 16x9 9x16 1x1; do
+  npx remotion render Launch "out/launch-${ar}.mp4" --props=props/launch.json --props-merge="{\"aspect\":\"${ar}\"}"
+done
+npx remotion render Launch out/demo.gif --codec=gif --props=props/launch.json   # README demo
+```
+
+**Before you finish:**
+1. `npx remotion still` renders cleanly at hook / reveal / end card — no errors, no missing fonts/assets.
+2. Logo/tagline/CTA text exact, brand colors right; reveal lands on the drop frame; key content inside the center safe zone, clear of the 9:16 bottom third.
+3. Frame-driven only — no GSAP/audio-callback timing, `Date.now()`, or `Math.random()` (beats/drop baked into props).
+4. Shipped props render correctly (not just `defaultProps`); the end card holds ≥2s with one CTA.
+5. Master verified in 16:9 + 9:16 + 1:1 before encoding; MP4s play; (optional) GIF for the README.
+
 ## Reference files
 
 - `references/launch-structure.md` — a full shot-by-shot template with timecodes for a 30s film (scalable to 15–60s), beat-synced reveal timing, kinetic-montage shot recipes, the sound-design-leads-picture workflow, and detailed multi-aspect safe-area maps for 16:9 / 9:16 / 1:1.

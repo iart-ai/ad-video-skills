@@ -150,6 +150,44 @@ Keep colors/fonts/quote-mark/layout in one theme object so 50 testimonials stay 
 - Every animated value derives from `useCurrentFrame()` — no CSS/JS timers.
 - Every field is a prop; one template renders every review in the folder.
 
+## Deliver & verify (rendered stills → MP4)
+
+**Output contract:**
+- A Remotion `Testimonial` registered as `<Composition>` (+ zod `schema` + `defaultProps`), every value frame-driven (no CSS transitions / JS timers / `Date.now()` / `Math.random()`).
+- Deliverable = the rendered `out/*.mp4` per review per aspect (plus the project + review data, so the user re-renders on new quotes).
+
+**Verify loop — render stills → inspect → encode.** Cheap PNGs first; render with the **shipped** review's props, not just `defaultProps`.
+
+```bash
+# Frame-exact stills across the reveal order: quote → stars → author
+npx remotion still Testimonial out/f-quote.png  --frame=30  --props=reviews/r1.json  # lines in reading order, emphasis span
+npx remotion still Testimonial out/f-stars.png  --frame=48  --props=reviews/r1.json  # stars filled to the REAL score (e.g. 4.5)
+npx remotion still Testimonial out/f-author.png --frame=215 --props=reviews/r1.json  # author block signed off, holding still
+# inspect each: fidelity (quote VERBATIM, exactly one emphasized span, star fill matches rating, name/role/company exact)
+#   AND artifacts (text overflow/orphans, off-canvas, author in the 9:16 bottom third, missing font, broken avatar)
+```
+
+**Multi-aspect / batch — verify one review in EACH target aspect before batch-rendering the list.** A layout bug (overflowing quote, clipped author) repeats across every review × aspect; catch it once.
+
+```bash
+for ar in 9x16 1x1 16x9; do                                  # one representative review, every aspect
+  npx remotion still Testimonial "out/r1-${ar}.png" --frame=215 \
+    --props=reviews/r1.json --props-merge="{\"aspect\":\"${ar}\"}"
+done
+# stills clean in all aspects? → then batch-render the list:
+for f in reviews/*.json; do id=$(basename "$f" .json); for ar in 9x16 1x1 16x9; do
+  npx remotion render Testimonial "out/${id}-${ar}.mp4" --props="$f" --props-merge="{\"aspect\":\"${ar}\"}"
+done; done
+npx remotion render Testimonial out/demo.gif --codec=gif --props=reviews/r1.json   # README demo
+```
+
+**Before you finish:**
+1. `npx remotion still` renders cleanly at quote / stars / author — no errors, no missing fonts/avatar.
+2. Quote is verbatim with one emphasized span; stars fill to the real score; name/role/company exact and inside the safe zone (clear of the 9:16 bottom third).
+3. Frame-driven only — no CSS/JS timers, `Date.now()`, or `Math.random()`.
+4. Shipped review's props render correctly (not just `defaultProps`); `aria-label` carries the real rating.
+5. One review verified in 9:16 + 1:1 + 16:9 before the batch; MP4s play; (optional) GIF for the README.
+
 ## Reference files
 
 - `references/quote-card.md` — a complete runnable Remotion `Testimonial` composition: staggered line reveal, key-phrase highlight sweep, fractional star fill, author block, theme object, and the timing map for a 9:16 card. Plus a dependency-free HTML/CSS variant.

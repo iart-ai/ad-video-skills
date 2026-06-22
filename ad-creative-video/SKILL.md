@@ -117,6 +117,44 @@ Keep critical content out of the 9:16 bottom third — that is where the platfor
 - Each variant exported 9:16 + 4:5 + 1:1 (+16:9 if needed), key content in the center square.
 - Brand stays locked across all variants via a single theme object.
 
+## Deliver & verify (rendered stills → MP4)
+
+**Output contract:**
+- A Remotion ad template registered as `<Composition>` (+ zod `schema` + `defaultProps`), every animated value frame-driven (no CSS transitions / library timers / `Date.now()` / `Math.random()`).
+- Deliverable = the rendered `out/*.mp4` per variant per aspect (plus the project + CSV, so the marketer re-renders on new rows).
+
+**Verify loop — render stills → inspect → encode.** Cheap PNGs first, full encode only once they're clean. Render with the **shipped** props (the real row), not just `defaultProps`.
+
+```bash
+# Frame-exact stills across the hook→CTA arc, with a real variant's props
+npx remotion still AdTemplate out/f-hook.png --frame=12  --props=props/v1.json   # hook readable < 2s
+npx remotion still AdTemplate out/f-mid.png  --frame=300 --props=props/v1.json   # benefit/proof
+npx remotion still AdTemplate out/f-cta.png  --frame=689 --props=props/v1.json   # CTA, message-matched
+# inspect each: fidelity (hook / offer / proof / CTA text exact, brand bg+accent right)
+#   AND artifacts (text overflow, off-canvas, CTA inside the 9:16 bottom third, missing font, wrong row binding)
+```
+
+**Multi-aspect / batch — verify one variant in EACH aspect before batch-rendering the matrix.** A layout bug repeats across every row × aspect; catch it once.
+
+```bash
+for ar in 9x16 4x5 1x1; do                                  # one representative variant, every target aspect
+  npx remotion still AdTemplate "out/v1-${ar}.png" --frame=300 \
+    --props=props/v1.json --props-merge="{\"aspect\":\"${ar}\"}"
+done
+# stills clean in all aspects? → then batch-render every row × aspect:
+for f in props/*.json; do id=$(basename "$f" .json); for ar in 9x16 4x5 1x1; do
+  npx remotion render AdTemplate "out/${id}-${ar}.mp4" --props="$f" --props-merge="{\"aspect\":\"${ar}\"}"
+done; done
+npx remotion render AdTemplate out/demo.gif --codec=gif --props=props/v1.json   # README demo
+```
+
+**Before you finish:**
+1. `npx remotion still` renders cleanly at hook / mid / CTA — no errors, no missing fonts/assets.
+2. Hook/offer/proof/CTA text exact and brand colors right; nothing in the 9:16 bottom third or outside the center safe zone.
+3. Frame-driven only — no CSS/library timers, `Date.now()`, or `Math.random()`.
+4. Shipped row's props render correctly (not just `defaultProps`); one variable per variant holds.
+5. One variant verified in 9:16 + 4:5 + 1:1 before the batch; MP4s play; (optional) GIF for the README.
+
 ## Reference files
 
 - `references/batch-ad-pipeline.md` — the full runnable Remotion ad template, the CSV→typed-props parser with validation, a one-variable test-matrix generator, the brand-lock theme object, and the complete batch + multi-aspect render script.
