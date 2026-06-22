@@ -45,9 +45,10 @@ Works with Claude Code, Cursor, Codex, GitHub Copilot, and 40+ agents.
 
 ## More packs
 
-Part of a 10-pack open-source collection — install only what you need. Full hub: **[github.com/iart-ai](https://github.com/iart-ai)**
+Part of an 11-pack open-source collection — install only what you need. Full hub: **[github.com/iart-ai](https://github.com/iart-ai)**
 
-[short-form-video-skills](https://github.com/iart-ai/short-form-video-skills) (Reels / TikTok / Shorts) · [creator-channel-skills](https://github.com/iart-ai/creator-channel-skills) (Podcasters & YouTubers) · [ecommerce-video-skills](https://github.com/iart-ai/ecommerce-video-skills) (E-commerce sellers) · [data-video-skills](https://github.com/iart-ai/data-video-skills) (Analysts & PMs) · [explainer-video-skills](https://github.com/iart-ai/explainer-video-skills) (Educators) · [web-animation-skills](https://github.com/iart-ai/web-animation-skills) (Frontend devs) · [motion-design-skills](https://github.com/iart-ai/motion-design-skills) (Motion designers) · [motion-business-skills](https://github.com/iart-ai/motion-business-skills) (Freelancers & studios) · [3d-motion-skills](https://github.com/iart-ai/3d-motion-skills) (3D / WebGL)
+[short-form-video-skills](https://github.com/iart-ai/short-form-video-skills) (Reels / TikTok / Shorts) · [creator-channel-skills](https://github.com/iart-ai/creator-channel-skills) (Podcasters & YouTubers) · [ecommerce-video-skills](https://github.com/iart-ai/ecommerce-video-skills) (E-commerce sellers) · [data-video-skills](https://github.com/iart-ai/data-video-skills) (Analysts & PMs) · [explainer-video-skills](https://github.com/iart-ai/explainer-video-skills) (Educators) · [web-animation-skills](https://github.com/iart-ai/web-animation-skills) (Frontend devs) · [motion-design-skills](https://github.com/iart-ai/motion-design-skills) (Motion designers) · [motion-business-skills](https://github.com/iart-ai/motion-business-skills) (Freelancers & studios) · [3d-motion-skills](https://github.com/iart-ai/3d-motion-skills) (3D / WebGL) · [manim-skills](https://github.com/iart-ai/manim-skills) (Math / educational)
+
 
 ## License
 
