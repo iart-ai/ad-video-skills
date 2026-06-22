@@ -2,6 +2,8 @@
 
 > AI coding agent skills for ad / advertising video — turn one motion-graphics template into batches of on-brand, A/B-testable ad creative, launch films, and testimonial clips.
 
+![Ad Video Skills — animated showcase](./showcase.gif)
+
 ## Install
 
 ```bash

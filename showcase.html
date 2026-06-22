@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ad Creative · Punchy Sizzle · GSAP</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Archivo+Black&family=Fraunces:ital,opsz,wght@0,9..144,900;1,9..144,500&family=Inter:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg:     #0c0608;
+    --bg2:    #1a0a10;
+    --ink:    #fff7f0;
+    --muted:  #b08a8a;
+    --red:    #ff2d3d;
+    --yellow: #ffd400;
+    --magenta:#ff2bd1;
+    --cyan:   #00e5ff;
+    --lime:   #b6ff2d;
+  }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden; background: var(--bg);
+    font-family: 'Anton', sans-serif;
+  }
+
+  #stage {
+    position: fixed; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    background:
+      radial-gradient(130% 120% at 50% 0%, #2a0c16 0%, var(--bg2) 40%, var(--bg) 100%);
+    perspective: 1300px; overflow: hidden;
+  }
+
+  .blob {
+    position: absolute; border-radius: 50%;
+    filter: blur(70px); opacity: 0.42;
+    will-change: transform; pointer-events: none;
+  }
+  #blobA { width: 50vmin; height: 50vmin; background: var(--red);     top: -12%; left: -8%; }
+  #blobB { width: 44vmin; height: 44vmin; background: var(--magenta); bottom: -14%; right: -10%; opacity: 0.32; }
+  #blobC { width: 34vmin; height: 34vmin; background: var(--cyan);    top: 55%; left: 58%; opacity: 0.24; }
+
+  .scene {
+    position: absolute;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    will-change: transform, opacity; z-index: 2;
+  }
+  .line { display: flex; gap: 0 0.05em; overflow: visible; padding: 0.04em 0; justify-content: center; }
+  .word {
+    font-size: clamp(2.8rem, 15vw, 13rem);
+    line-height: 0.82; letter-spacing: -0.03em;
+    color: var(--ink); text-transform: uppercase;
+    white-space: nowrap; will-change: transform, opacity;
+  }
+  .char { display: inline-block; will-change: transform, opacity; }
+
+  .serif { font-family: 'Fraunces', serif; font-weight: 900; text-transform: none; letter-spacing: -0.03em; }
+  .serif.italic { font-style: italic; font-weight: 500; }
+
+  .red     { color: var(--red); }
+  .yellow  { color: var(--yellow); }
+  .magenta { color: var(--magenta); }
+  .cyan    { color: var(--cyan); }
+  .lime    { color: var(--lime); }
+  .stroke  { color: transparent; -webkit-text-stroke: 3px var(--ink); }
+
+  .mega {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(3.4rem, 22vw, 19rem);
+    line-height: 0.78; color: var(--ink); letter-spacing: -0.04em;
+  }
+  .lockup {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(2.4rem, 12vw, 10rem);
+    line-height: 0.82; letter-spacing: -0.04em; color: var(--ink);
+  }
+  .brandmark {
+    font-family: 'Fraunces', serif; font-weight: 900;
+    text-transform: lowercase;
+    font-size: clamp(2.4rem, 12vw, 10rem);
+    line-height: 0.82; letter-spacing: -0.04em; color: var(--ink);
+  }
+  .brandmark .dot { color: var(--red); }
+
+  .kicker {
+    font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: clamp(0.7rem, 1.7vw, 1.05rem);
+    letter-spacing: 0.45em; text-transform: uppercase;
+    color: var(--muted); text-indent: 0.45em;
+  }
+
+  /* burst SALE badge */
+  #burst {
+    position: absolute; width: 56vmin; height: 56vmin;
+    top: 50%; left: 50%; margin: -28vmin 0 0 -28vmin;
+    z-index: 1; visibility: hidden; will-change: transform;
+  }
+  #burst svg { width: 100%; height: 100%; }
+
+  /* glossy CTA button */
+  #cta {
+    position: absolute; z-index: 4; visibility: hidden;
+    padding: clamp(18px, 3.4vw, 40px) clamp(36px, 7vw, 96px);
+    border-radius: 999px;
+    background: linear-gradient(180deg, #ff5a66 0%, var(--red) 55%, #cc1422 100%);
+    box-shadow: 0 18px 50px rgba(255,45,61,0.5), inset 0 2px 6px rgba(255,255,255,0.45), inset 0 -6px 14px rgba(120,0,10,0.5);
+    font-family: 'Archivo Black', sans-serif;
+    font-size: clamp(1.6rem, 6vw, 4.6rem);
+    color: #fff; letter-spacing: 0.01em; text-transform: uppercase;
+    white-space: nowrap; will-change: transform;
+  }
+  #cta::after {
+    content: ''; position: absolute; top: 6%; left: 6%; right: 6%; height: 38%;
+    border-radius: 999px; background: linear-gradient(180deg, rgba(255,255,255,0.55), rgba(255,255,255,0));
+    pointer-events: none;
+  }
+
+  /* finale: full-bleed poster blocks + halftone burst + glossy seal */
+  .slab {
+    position: absolute; left: 0; width: 100%;
+    z-index: 1; will-change: transform; visibility: hidden;
+  }
+  #slab1 { top: 0;   height: 34%; background: var(--red); }
+  #slab2 { top: 34%; height: 32%; background: var(--yellow); }
+  #slab3 { top: 66%; height: 34%; background: var(--magenta); }
+
+  #halftone {
+    position: absolute; top: 50%; left: 50%;
+    width: 120vmax; height: 120vmax; margin: -60vmax 0 0 -60vmax;
+    z-index: 1; will-change: transform, opacity; visibility: hidden;
+    background-image: radial-gradient(var(--ink) 22%, transparent 23%);
+    background-size: 3.4vmin 3.4vmin;
+    -webkit-mask-image: radial-gradient(circle at center, #000 18%, transparent 62%);
+            mask-image: radial-gradient(circle at center, #000 18%, transparent 62%);
+    opacity: 0.18;
+  }
+
+  #seal {
+    position: absolute; top: 50%; left: 50%;
+    width: 58vmin; height: 58vmin; margin: -29vmin 0 0 -29vmin;
+    z-index: 1; will-change: transform; visibility: hidden;
+  }
+  #seal svg { width: 100%; height: 100%; display: block; }
+
+  #fx { position: fixed; inset: 0; pointer-events: none; z-index: 45; overflow: hidden; }
+  .panel { position: absolute; will-change: transform; visibility: hidden; }
+
+  #flash { position: fixed; inset: 0; background: var(--ink); opacity: 0; pointer-events: none; z-index: 50; }
+
+  .grain {
+    position: fixed; inset: 0; pointer-events: none;
+    opacity: 0.08; mix-blend-mode: overlay; z-index: 60;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  #progress {
+    position: fixed; left: 0; bottom: 0;
+    height: 4px; width: 100%;
+    transform: scaleX(0); transform-origin: left;
+    background: linear-gradient(90deg, var(--red), var(--yellow), var(--magenta));
+    z-index: 70;
+  }
+
+  .ui {
+    position: fixed; font-family: 'Inter', sans-serif; font-weight: 900;
+    font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase;
+    z-index: 80; color: var(--muted);
+  }
+  #brand { top: 22px; left: 24px; }
+  #replay {
+    bottom: 20px; right: 22px; background: transparent;
+    border: 1.5px solid #4a2a30; border-radius: 999px;
+    padding: 9px 18px; cursor: pointer;
+    transition: color .2s, border-color .2s, background .2s;
+  }
+  #replay:hover { color: var(--bg); background: var(--ink); border-color: var(--ink); }
+</style>
+</head>
+<body>
+  <div id="stage">
+    <div class="blob" id="blobA"></div>
+    <div class="blob" id="blobB"></div>
+    <div class="blob" id="blobC"></div>
+
+    <!-- Scene 1 : attention slam -->
+    <div class="scene" id="s1">
+      <div class="line"><span class="kicker">iart.ai&nbsp;&nbsp;Ad&nbsp;&nbsp;Studio</span></div>
+      <div class="line"><span class="word mega">BOOM</span></div>
+    </div>
+
+    <!-- Scene 2 : SALE burst -->
+    <div class="scene" id="s2">
+      <div class="line"><span class="word mega yellow">SALE</span></div>
+    </div>
+    <div id="burst">
+      <svg viewBox="-100 -100 200 200">
+        <polygon id="burstStar" fill="#ff2d3d" points=""></polygon>
+      </svg>
+    </div>
+
+    <!-- Scene 3 : LIMITED -->
+    <div class="scene" id="s3">
+      <div class="line"><span class="word stroke">LIMITED</span></div>
+      <div class="line"><span class="word serif italic magenta">offer</span></div>
+    </div>
+
+    <!-- Scene 4 : punch words -->
+    <div class="scene" id="s4">
+      <div class="line"><span class="word red">FAST</span></div>
+      <div class="line"><span class="word cyan">BOLD</span></div>
+      <div class="line"><span class="word lime">LOUD</span></div>
+    </div>
+
+    <!-- Scene 5 : CTA button -->
+    <div class="scene" id="s5">
+      <div class="line"><span class="kicker yellow">Don't&nbsp;&nbsp;Wait</span></div>
+    </div>
+    <div id="cta">BUY NOW</div>
+
+    <!-- Scene 6 : lockup -->
+    <div class="scene" id="s6">
+      <div class="line"><span class="word lockup">AD</span></div>
+      <div class="line"><span class="word lockup red">CREATIVE</span></div>
+    </div>
+
+    <!-- Scene 7 : iart.ai -->
+    <div class="scene" id="s7">
+      <div class="line"><span class="word brandmark">iart<span class="dot">.</span>ai</span></div>
+      <div class="line"><span class="kicker">Made&nbsp;&nbsp;to&nbsp;&nbsp;Convert</span></div>
+    </div>
+
+    <!-- finale poster blocks + halftone burst + stamped seal -->
+    <div class="slab" id="slab1"></div>
+    <div class="slab" id="slab2"></div>
+    <div class="slab" id="slab3"></div>
+    <div id="halftone"></div>
+    <div id="seal">
+      <svg viewBox="-100 -100 200 200">
+        <defs>
+          <radialGradient id="sealGloss" cx="50%" cy="34%" r="72%">
+            <stop offset="0%"  stop-color="#ff6470"/>
+            <stop offset="55%" stop-color="#ff2d3d"/>
+            <stop offset="100%" stop-color="#a50f1c"/>
+          </radialGradient>
+        </defs>
+        <polygon id="sealStar" fill="url(#sealGloss)" stroke="rgba(255,255,255,0.5)" stroke-width="1.5" points=""></polygon>
+        <circle cx="0" cy="0" r="62" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-dasharray="2 6"/>
+      </svg>
+    </div>
+  </div>
+
+  <div id="fx">
+    <div class="panel" id="p1"></div>
+    <div class="panel" id="p2"></div>
+    <div class="panel" id="p3"></div>
+    <div class="panel" id="p4"></div>
+    <div class="panel" id="p5"></div>
+  </div>
+
+  <div id="flash"></div>
+  <div class="grain"></div>
+  <div id="progress"></div>
+  <div class="ui" id="brand">◆ iart.ai</div>
+  <button class="ui" id="replay">↻ Replay</button>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script>
+  // build SALE starburst points
+  (function(){
+    const pts = []; const spikes = 16, outer = 100, inner = 74;
+    for (let i = 0; i < spikes * 2; i++) {
+      const r = (i % 2 === 0) ? outer : inner;
+      const a = (Math.PI / spikes) * i - Math.PI / 2;
+      pts.push((Math.cos(a) * r).toFixed(2) + ',' + (Math.sin(a) * r).toFixed(2));
+    }
+    document.getElementById('burstStar').setAttribute('points', pts.join(' '));
+
+    // build glossy seal scalloped-star points
+    const sp = []; const sspikes = 24, sout = 78, sin = 64;
+    for (let i = 0; i < sspikes * 2; i++) {
+      const r = (i % 2 === 0) ? sout : sin;
+      const a = (Math.PI / sspikes) * i - Math.PI / 2;
+      sp.push((Math.cos(a) * r).toFixed(2) + ',' + (Math.sin(a) * r).toFixed(2));
+    }
+    document.getElementById('sealStar').setAttribute('points', sp.join(' '));
+  })();
+
+  function splitChars(word) {
+    const text = word.textContent;
+    word.textContent = '';
+    const chars = [];
+    for (const ch of text) {
+      const span = document.createElement('span');
+      span.className = 'char';
+      span.innerHTML = (ch === ' ' || ch === ' ') ? '&nbsp;' : ch;
+      word.appendChild(span);
+      if (ch !== ' ' && ch !== ' ') chars.push(span);
+    }
+    return chars;
+  }
+  document.querySelectorAll('.word:not(.brandmark)').forEach(splitChars);
+
+  function splitBrand(el) {
+    const html = el.innerHTML;
+    el.innerHTML = '';
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html;
+    tmp.childNodes.forEach(node => {
+      const isDot = node.nodeType === 1;
+      const text = node.textContent;
+      for (const ch of text) {
+        const span = document.createElement('span');
+        span.className = 'char' + (isDot ? ' dot' : '');
+        span.textContent = ch;
+        el.appendChild(span);
+      }
+    });
+  }
+  document.querySelectorAll('.brandmark').forEach(splitBrand);
+
+  const charsOf = (sel) => gsap.utils.toArray(sel + ' .char');
+
+  gsap.set('.scene', { autoAlpha: 0 });
+
+  gsap.to('#blobA', { xPercent: 16, yPercent: 18, duration: 7, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  gsap.to('#blobB', { xPercent: -18, yPercent: -12, duration: 9, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+  gsap.to('#blobC', { xPercent: -22, yPercent: 16, duration: 6.5, repeat: -1, yoyo: true, ease: 'sine.inOut' });
+
+  function build() {
+    const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+    tl.fromTo('#progress', { scaleX: 0 }, { scaleX: 1, duration: 9.8, ease: 'none' }, 0);
+
+    // ===== SCENE 1 : BOOM slam =====
+    tl.set('#s1', { autoAlpha: 1 }, 0)
+      .from('#s1 .kicker', { yPercent: 100, opacity: 0, duration: 0.4 }, 0.0)
+      .from(charsOf('#s1 .mega'), {
+        scale: 4.5, opacity: 0, filter: 'blur(18px)',
+        stagger: { each: 0.06, from: 'center' }, duration: 0.4, ease: 'back.out(1.4)'
+      }, 0.1)
+      .to('#stage', { x: 8, duration: 0.04, yoyo: true, repeat: 6 }, 0.3)
+      .to('#stage', { x: 0, duration: 0.04 }, 0.6)
+      .to('#flash', { opacity: 0.4, duration: 0.05 }, 0.12)
+      .to('#flash', { opacity: 0, duration: 0.25 }, 0.18)
+      // TRANSITION 1 — EXPLODE OUT
+      .to(charsOf('#s1 .mega').concat(gsap.utils.toArray('#s1 .kicker')), {
+        scale: 3, opacity: 0, filter: 'blur(14px)',
+        stagger: { each: 0.02, from: 'center' }, duration: 0.4, ease: 'power3.in'
+      }, 0.95)
+      .set('#s1', { autoAlpha: 0 });
+
+    // ===== SCENE 2 : SALE burst =====
+    tl.set('#s2', { autoAlpha: 1 }, 1.3)
+      .set('#burst', { visibility: 'visible' }, 1.3)
+      .fromTo('#burst', { scale: 0, rotation: -40, autoAlpha: 0 },
+        { scale: 1, rotation: 0, autoAlpha: 1, duration: 0.45, ease: 'back.out(2)' }, 1.3)
+      .to('#burst', { rotation: 360, duration: 2.2, ease: 'none' }, 1.3)
+      .from(charsOf('#s2 .mega'), {
+        scale: 0, rotation: 30, opacity: 0,
+        stagger: { each: 0.05, from: 'start' }, duration: 0.45, ease: 'back.out(2.4)'
+      }, 1.5)
+      .to('#s2 .mega .char', { y: -10, duration: 0.1, yoyo: true, repeat: 3, stagger: 0.02 }, 2.0)
+      .to('#s2', { autoAlpha: 0, duration: 0.25 }, 2.35)
+      .to('#burst', { scale: 1.6, autoAlpha: 0, duration: 0.3, ease: 'power2.in' }, 2.35)
+      .set('#burst', { visibility: 'hidden' }, 2.65);
+
+    // TRANSITION 2 — COLOR BAND SWEEP
+    const bands = ['#p1','#p2','#p3'];
+    const bandColors = ['var(--yellow)','var(--ink)','var(--magenta)'];
+    gsap.set(bands, {
+      visibility: 'visible', left: '-5%', width: '110%', height: '120%',
+      top: 0, skewY: -7, backgroundColor: (i) => bandColors[i], yPercent: 135
+    });
+    tl.to(bands, { yPercent: -135, duration: 0.5, stagger: 0.07, ease: 'power3.inOut' }, 2.35)
+      .set(bands, { visibility: 'hidden' }, 3.0);
+
+    // ===== SCENE 3 : LIMITED offer =====
+    tl.set('#s3', { autoAlpha: 1 }, 2.6)
+      .from('#s3 .stroke .char', { yPercent: 120, rotateX: -90, opacity: 0, stagger: 0.04, duration: 0.45 }, 2.62)
+      .from('#s3 .serif .char', { yPercent: 110, opacity: 0, skewY: 8, stagger: { each: 0.03, from: 'random' }, duration: 0.45 }, 2.85)
+      .to(charsOf('#s3'), { opacity: 0, xPercent: 80, filter: 'blur(8px)', stagger: { each: 0.015, from: 'start' }, duration: 0.35, ease: 'power3.in' }, 3.45)
+      .set('#s3', { autoAlpha: 0 });
+
+    // TRANSITION 3 — VENETIAN SHUTTER
+    const blinds = ['#p1','#p2','#p3','#p4'];
+    const blindColors = ['var(--red)','var(--yellow)','var(--magenta)','var(--ink)'];
+    gsap.set(blinds, {
+      visibility: 'visible', left: 0, width: '100%', height: '25.2%',
+      top: (i) => (i * 25) + '%',
+      backgroundColor: (i) => blindColors[i],
+      scaleY: 0, transformOrigin: 'top center'
+    });
+    tl.to(blinds, { scaleY: 1, duration: 0.22, stagger: 0.04, ease: 'power2.in' }, 3.5)
+      .set(blinds, { transformOrigin: 'bottom center' }, 3.82)
+      .to(blinds, { scaleY: 0, duration: 0.28, stagger: 0.04, ease: 'power2.out' }, 3.85)
+      .set(blinds, { visibility: 'hidden' }, 4.2);
+
+    // ===== SCENE 4 : FAST / BOLD / LOUD fast cuts =====
+    tl.set('#s4', { autoAlpha: 1 }, 3.85);
+    tl.from('#s4 .line:nth-child(1) .char', { xPercent: -150, opacity: 0, stagger: 0.03, duration: 0.3 }, 3.87)
+      .from('#s4 .line:nth-child(2) .char', { xPercent: 150, opacity: 0, stagger: 0.03, duration: 0.3 }, 4.05)
+      .from('#s4 .line:nth-child(3) .char', { scale: 2.4, opacity: 0, stagger: 0.02, duration: 0.3, ease: 'back.out(2)' }, 4.23)
+      .to('#stage', { x: 6, duration: 0.04, yoyo: true, repeat: 4 }, 4.3)
+      .to('#stage', { x: 0, duration: 0.04 }, 4.5)
+      .to(charsOf('#s4'), { opacity: 0, scale: 1.6, filter: 'blur(10px)', stagger: 0.01, duration: 0.28, ease: 'power2.in' }, 4.55)
+      .set('#s4', { autoAlpha: 0 });
+
+    // TRANSITION 4 — WHIP-PAN BLUR
+    tl.to('#stage', { x: 110, filter: 'blur(8px)', duration: 0.14, ease: 'power2.in' }, 4.6)
+      .set('#stage', { x: -120 }, 4.74)
+      .to('#stage', { x: 0, filter: 'blur(0px)', duration: 0.3, ease: 'power3.out' }, 4.74);
+
+    // ===== SCENE 5 : glossy CTA pop =====
+    tl.set('#s5', { autoAlpha: 1 }, 4.8)
+      .set('#cta', { visibility: 'visible' }, 4.8)
+      .from('#s5 .kicker', { yPercent: -100, opacity: 0, duration: 0.4 }, 4.82)
+      .fromTo('#cta',
+        { scale: 0, autoAlpha: 0, y: 40, rotation: -6 },
+        { scale: 1, autoAlpha: 1, y: '8vh', rotation: 0, duration: 0.5, ease: 'back.out(2.2)' }, 4.85)
+      // glossy pulse like a pressable button
+      .to('#cta', { scale: 1.08, duration: 0.18, yoyo: true, repeat: 3, ease: 'sine.inOut' }, 5.4)
+      .to('#flash', { opacity: 0.3, duration: 0.05 }, 4.9)
+      .to('#flash', { opacity: 0, duration: 0.25 }, 4.96)
+      .to('#cta', { scale: 0.2, autoAlpha: 0, filter: 'blur(8px)', duration: 0.3, ease: 'power3.in' }, 5.55)
+      .to('#s5', { autoAlpha: 0, duration: 0.25 }, 5.55)
+      .set('#cta', { visibility: 'hidden' }, 5.85);
+
+    // TRANSITION 5 — IRIS reveal
+    gsap.set('#p5', {
+      visibility: 'visible', top: '50%', left: '50%',
+      width: '160vmax', height: '160vmax', xPercent: -50, yPercent: -50,
+      borderRadius: '50%', backgroundColor: 'var(--bg)', scale: 1.4
+    });
+    tl.fromTo('#p5', { scale: 1.4 }, { scale: 0, duration: 0.45, ease: 'power3.inOut' }, 5.6)
+      .set('#p5', { visibility: 'hidden' }, 6.1);
+
+    // ===== SCENE 6 : AD CREATIVE poster — color slabs slam & stack =====
+    gsap.set('#slab1', { visibility: 'visible', xPercent: -110 });
+    gsap.set('#slab2', { visibility: 'visible', xPercent:  110 });
+    gsap.set('#slab3', { visibility: 'visible', xPercent: -110 });
+    // slabs slam in from alternating sides to assemble a 3-band poster
+    tl.to('#slab1', { xPercent: 0, duration: 0.34, ease: 'power4.out' }, 5.7)
+      .to('#slab3', { xPercent: 0, duration: 0.34, ease: 'power4.out' }, 5.78)
+      .to('#slab2', { xPercent: 0, duration: 0.34, ease: 'power4.out' }, 5.86)
+      // poster recoil thump as the last block lands
+      .to(['#slab1','#slab2','#slab3'], { scaleX: 1.015, duration: 0.08, yoyo: true, repeat: 1, transformOrigin: 'center', ease: 'sine.inOut' }, 6.2);
+
+    tl.set('#s6', { autoAlpha: 1 }, 5.95)
+      .from('#s6 .line:nth-child(1) .char', { yPercent: -160, opacity: 0, filter: 'blur(10px)', stagger: { each: 0.05, from: 'center' }, duration: 0.42, ease: 'back.out(1.6)' }, 5.95)
+      .from('#s6 .line:nth-child(2) .char', { yPercent: 160, opacity: 0, filter: 'blur(10px)', stagger: { each: 0.04, from: 'center' }, duration: 0.42, ease: 'back.out(1.6)' }, 6.12)
+      .to('#flash', { opacity: 0.32, duration: 0.05 }, 6.2)
+      .to('#flash', { opacity: 0, duration: 0.25 }, 6.26)
+      .to('#stage', { x: 7, duration: 0.04, yoyo: true, repeat: 4 }, 6.2)
+      .to('#stage', { x: 0, duration: 0.04 }, 6.4)
+      // poster blasts apart: slabs fly out, lockup scales away
+      .to('#slab1', { xPercent: -110, duration: 0.4, ease: 'power3.in' }, 6.95)
+      .to('#slab3', { xPercent:  110, duration: 0.4, ease: 'power3.in' }, 6.95)
+      .to('#slab2', { xPercent: -110, duration: 0.4, ease: 'power3.in' }, 7.0)
+      .to(charsOf('#s6'), { scale: 0, opacity: 0, filter: 'blur(8px)', stagger: { each: 0.02, from: 'edges' }, duration: 0.4, ease: 'power3.in' }, 6.95)
+      .set(['#slab1','#slab2','#slab3'], { visibility: 'hidden' }, 7.45)
+      .set('#s6', { autoAlpha: 0 });
+
+    // ===== SCENE 7 : iart.ai signature — halftone burst + stamped glossy seal =====
+    // halftone dot burst expands behind the logo
+    gsap.set('#halftone', { visibility: 'visible', scale: 0.3, opacity: 0, rotation: 0 });
+    tl.to('#halftone', { scale: 1, opacity: 0.2, duration: 0.6, ease: 'power3.out' }, 7.0)
+      .to('#halftone', { rotation: 8, duration: 1.6, ease: 'sine.inOut' }, 7.2);
+
+    tl.set('#s7', { autoAlpha: 1 }, 7.05)
+      .from(charsOf('#s7 .brandmark'), { yPercent: 115, rotateX: -85, opacity: 0, stagger: { each: 0.06, from: 'start' }, duration: 0.7, ease: 'back.out(1.8)' }, 7.05)
+      .from('#s7 .brandmark .dot', { scale: 0, duration: 0.5, ease: 'back.out(3)' }, 7.5)
+      .to('#s7 .brandmark .dot', { scale: 1.3, duration: 0.45, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 7.8)
+      .from('#s7 .kicker', { yPercent: 100, opacity: 0, duration: 0.55 }, 7.6)
+      .to('#s7 .brandmark', { scale: 1.03, duration: 1.0, ease: 'sine.inOut' }, 7.8);
+
+    // glossy seal STAMPS down over the corner of the lockup
+    gsap.set('#seal', { visibility: 'visible', xPercent: 86, yPercent: -86, rotation: 14 });
+    tl.fromTo('#seal',
+        { scale: 3.2, autoAlpha: 0, rotation: 28 },
+        { scale: 1, autoAlpha: 1, rotation: 14, duration: 0.34, ease: 'power4.in' }, 8.0)
+      .to('#flash', { opacity: 0.28, duration: 0.05 }, 8.3)
+      .to('#flash', { opacity: 0, duration: 0.22 }, 8.36)
+      // stamp recoil + subtle settle
+      .to('#seal', { scale: 0.94, duration: 0.07, yoyo: true, repeat: 1, ease: 'sine.inOut' }, 8.34)
+      .to('#seal', { rotation: 11, duration: 0.9, ease: 'sine.inOut' }, 8.5);
+
+    tl.to({}, { duration: 0.4 });
+    return tl;
+  }
+
+  let master = build();
+  document.getElementById('replay').addEventListener('click', () => master.restart());
+</script>
+</body>
+</html>
