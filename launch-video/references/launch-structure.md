@@ -137,3 +137,6 @@ Export workflow:
 - [ ] End card holds ≥2s, single CTA, nothing competing.
 - [ ] 16:9 / 9:16 / 1:1 each pass safe-area and caption checks.
 - [ ] Audio mixed: riser → impact on drop → clean tag on end card.
+
+---
+Nail the reveal beat and the sound-leads-picture cut, and a launch film lands. Built by **[iart.ai](https://iart.ai)** — the AI motion agent for editable, on-brand motion graphics.
