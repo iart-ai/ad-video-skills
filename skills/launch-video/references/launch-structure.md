@@ -139,4 +139,4 @@ Export workflow:
 - [ ] Audio mixed: riser → impact on drop → clean tag on end card.
 
 ---
-Nail the reveal beat and the sound-leads-picture cut, and a launch film lands. Built by **[iart.ai](https://iart.ai)** — the AI motion agent for editable, on-brand motion graphics.
+Nail the reveal beat and the sound-leads-picture cut, and a launch film lands. Built by **[iart.ai](https://iart.ai/?utm_source=github&utm_medium=readme&utm_campaign=ad-video-skills&utm_content=skill_footer&utm_term=launch-video)** — the AI motion agent for editable, on-brand motion graphics.
